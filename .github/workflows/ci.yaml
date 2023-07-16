@@ -41,10 +41,11 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build Container
+      - name: Build Container Image
         uses: docker/build-push-action@v4
         with:
           context: ./frontend
+          target: production
           load: true
           tags: sudomateo/taskly-frontend:${{ github.sha }}
       - name: Run Trivy Scanner
@@ -55,6 +56,14 @@ jobs:
           exit-code: "1"
           vuln-type: "os"
           ignore-unfixed: true
+      - name: Push Container Image
+        if: ${{ github.ref_name == 'main' }}
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          target: production
+          push: true
+          tags: sudomateo/taskly-frontend:${{ github.sha }}
 
   lint-backend:
     name: Lint Backend
@@ -107,10 +116,11 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build Container
+      - name: Build Container Image
         uses: docker/build-push-action@v4
         with:
           context: ./backend
+          target: production
           load: true
           tags: sudomateo/taskly-backend:${{ github.sha }}
       - name: Run Trivy Scanner
@@ -121,3 +131,11 @@ jobs:
           exit-code: "1"
           vuln-type: "os"
           ignore-unfixed: true
+      - name: Push Container Image
+        if: ${{ github.ref_name == 'main' }}
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          target: production
+          push: true
+          tags: sudomateo/taskly-backend:${{ github.sha }}
