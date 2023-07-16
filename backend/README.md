@@ -99,15 +99,15 @@ Create a new user.
 
 #### Sample Request
 
-```
+```json
 {
-  name: "bobo"
+  "name": "bobo"
 }
 ```
 
 #### Sample Response
 
-```
+```json
 {
   "id": "f62eab5e-b0f5-47de-b60b-b3cd13d883ed",
   "name": "bobo"
@@ -120,7 +120,7 @@ Returns a list of users.
 
 #### Sample Response
 
-```
+```json
 [
   {
       "id": "60311e62-c621-493a-a17b-de2c0bf12967",
@@ -139,7 +139,7 @@ Create a new task for a user.
 
 #### Sample Request
 
-```
+```json
 {
   "userId":"f62eab5e-b0f5-47de-b60b-b3cd13d883ed",
   "task":"first task"
@@ -148,7 +148,7 @@ Create a new task for a user.
 
 #### Sample Response
 
-```
+```json
 {
   "id":"2bcb8b88-e7b1-4381-ac2c-d4486b1502ff",
   "userId":"f62eab5e-b0f5-47de-b60b-b3cd13d883ed",
@@ -162,7 +162,7 @@ Get the lists of tasks for a given user.
 
 #### Sample Response
 
-```
+```json
 [
   {
     "id":"2bcb8b88-e7b1-4381-ac2c-d4486b1502ff",
@@ -180,4 +180,16 @@ Get the lists of tasks for a given user.
     "task":"what a list"
   }
 ]
+```
+
+### GET /api/health
+
+Returns the health status of the API.
+
+#### Sample Response
+
+```json
+{
+  "status": "healthy"
+}
 ```
