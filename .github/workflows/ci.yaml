@@ -1,11 +1,12 @@
 ---
-name: Lint, Test, and Build
+name: Taskly CI
 
 on:
   push:
 
 env:
   NODE_VERSION: 20.4.0
+  TERRAFORM_VERSION: 1.5.3
 
 jobs:
   lint-frontend:
@@ -29,6 +30,8 @@ jobs:
     name: Build Frontend
     needs: ["lint-frontend"]
     runs-on: ubuntu-latest
+    env:
+      TASKLY_FRONTEND_TAG: sudomateo/taskly-frontend:${{ github.sha }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -47,11 +50,11 @@ jobs:
           context: ./frontend
           target: production
           load: true
-          tags: sudomateo/taskly-frontend:${{ github.sha }}
+          tags: ${{ env.TASKLY_FRONTEND_TAG }}
       - name: Run Trivy Scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: sudomateo/taskly-frontend:${{ github.sha }}
+          image-ref: ${{ env.TASKLY_FRONTEND_TAG }}
           format: "table"
           exit-code: "1"
           vuln-type: "os"
@@ -63,7 +66,7 @@ jobs:
           context: ./frontend
           target: production
           push: true
-          tags: sudomateo/taskly-frontend:${{ github.sha }}
+          tags: ${{ env.TASKLY_FRONTEND_TAG }}
 
   lint-backend:
     name: Lint Backend
@@ -104,6 +107,8 @@ jobs:
     name: Build Backend
     needs: ["test-backend"]
     runs-on: ubuntu-latest
+    env:
+      TASKLY_BACKEND_TAG: sudomateo/taskly-backend:${{ github.sha }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -122,11 +127,11 @@ jobs:
           context: ./backend
           target: production
           load: true
-          tags: sudomateo/taskly-backend:${{ github.sha }}
+          tags: ${{ env.TASKLY_BACKEND_TAG }}
       - name: Run Trivy Scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: sudomateo/taskly-backend:${{ github.sha }}
+          image-ref: ${{ env.TASKLY_BACKEND_TAG }}
           format: "table"
           exit-code: "1"
           vuln-type: "os"
@@ -138,7 +143,7 @@ jobs:
           context: ./backend
           target: production
           push: true
-          tags: sudomateo/taskly-backend:${{ github.sha }}
+          tags: ${{ env.TASKLY_BACKEND_TAG }}
 
   deploy:
     name: Deploy Taskly
@@ -151,7 +156,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.3
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
           cli_config_credentials_token: ${{ secrets.TERRAFORM_CLOUD_TOKEN }}
           terraform_wrapper: false
       - name: Terraform Init
