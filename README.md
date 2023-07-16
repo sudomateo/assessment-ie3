@@ -43,3 +43,38 @@ Access Taskly using the following URLs.
 
 - Frontend - http://localhost:3000
 - Backend - http://localhost:3030
+
+## Deploying
+
+On merge to `main` the `frontend` and `backend` components are linted, tested,
+and their container images are built and pushed to Docker Hub. After the
+container images are pushed to Docker Hub, Terraform is executed to deploy
+Taskly to DigitalOcean App Platform.
+
+The following directories contain the deployment code.
+
+- GitHub Actions - `.github/workflows`
+- Terraform Configuration - `infrastructure`
+
+### Architecture
+
+This is the architecture diagram for Taskly running on DigitalOcean App
+Platform.
+
+```mermaid
+flowchart LR
+    subgraph app [DigitalOcean App Platform]
+        ingress[Ingress]
+
+        subgraph components [Components]
+            frontend[Frontend]
+            backend[Backend]
+        end
+
+        ingress-->|/|frontend
+        ingress-->|/api|backend
+    end
+
+    client[Client]
+    client-->ingress
+```
