@@ -5,6 +5,9 @@ also used by [System Initiative](https://www.systeminit.com/) as an
 [assessment](https://github.com/systeminit/assessment-ie3) for their
 Infrastructure Engineer III role.
 
+A deployment of Taskly is live at https://taskly-9m6wx.ondigitalocean.app. This
+deployment will be destroyed on July 31, 2023.
+
 ## Development
 
 Taskly is split into two components, a `frontend` and a `backend`. These
